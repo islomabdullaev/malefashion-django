@@ -28,13 +28,18 @@
     {% endblock %}
 </head>
 
-<body>
     {% include 'layouts/header.html'%}
     {% block content %}
+    <body>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
     </div>
+
+
+    {% endblock %}
+
+    {% block extra_js %}
 
     <!-- Js Plugins -->
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
@@ -49,12 +54,8 @@
     <script src="{% static 'js/main.js' %}"></script>
 
     {% endblock %}
-
-    {% block extra_js %}
-
-    {% endblock %}
-
+    </body>
     {% include 'layouts/footer.html'%}
-</body>
+
 
 </html>
