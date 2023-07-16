@@ -38,7 +38,39 @@ class PostModel(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_upper_title(self):
+        return self.title.upper()
+    
+    def get_previous_post(self):
+        return self.get_previous_by_created_at
+    
+    def get_next_post(self):
+        return self.get_next_by_created_at()
 
     class Meta:
         verbose_name = _("Post")
         verbose_name_plural = _("Posts")
+
+
+class CommentModel(models.Model):
+    post = models.ForeignKey(
+        PostModel, on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name=_('comments'))
+    name = models.CharField(max_length=64, verbose_name=_('name'))
+    email = models.EmailField(max_length=64, verbose_name=_('email'))
+    phone = models.CharField(max_length=13, verbose_name=_('phone'))
+    comment = models.TextField(verbose_name=_('comment'))
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('created at'),
+        null=True)
+    
+    def __str__(self):
+        return f"{self.name}: {self.comment}"
+    
+    class Meta:
+        verbose_name = _("Comment")
+        verbose_name_plural = _("Comments")
