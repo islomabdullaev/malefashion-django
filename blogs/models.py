@@ -43,7 +43,7 @@ class PostModel(models.Model):
         return self.title.upper()
     
     def get_previous_post(self):
-        return self.get_previous_by_created_at
+        return self.get_previous_by_created_at()
     
     def get_next_post(self):
         return self.get_next_by_created_at()
@@ -56,8 +56,8 @@ class PostModel(models.Model):
 class CommentModel(models.Model):
     post = models.ForeignKey(
         PostModel, on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name=_('comments'))
+            related_name='comments',
+            verbose_name=_('comments'))
     name = models.CharField(max_length=64, verbose_name=_('name'))
     email = models.EmailField(max_length=64, verbose_name=_('email'))
     phone = models.CharField(max_length=13, verbose_name=_('phone'))
