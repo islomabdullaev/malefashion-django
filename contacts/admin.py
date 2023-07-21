@@ -5,4 +5,4 @@ from contacts.models import ContactModel
 # Register your models here.
 @admin.register(ContactModel)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'message']
+    list_display = ['name', 'email', 'message', 'created_at', 'updated_at']
