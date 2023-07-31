@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'products',
     'blogs',
     'contacts',
+
+    # 3rd party apps
+    'colorfield',
 ]
 
 MIDDLEWARE = [

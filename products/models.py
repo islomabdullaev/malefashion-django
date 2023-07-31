@@ -1,5 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.utils import timezone
+from django.contrib.auth.models import User
+
+from colorfield.fields import ColorField
 
 # Create your models here.
 
@@ -44,6 +48,7 @@ class SizeModel(models.Model):
 
 class ColorModel(models.Model):
     title = models.CharField(max_length=64, verbose_name=_('title'))
+    color = ColorField(default='#FF0000')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('created at'))
 
@@ -61,10 +66,10 @@ class ProductModel(models.Model):
     rating = models.PositiveIntegerField(default=0, verbose_name=_('rating'))
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField(verbose_name=_('description'))
-    categories = models.ManyToManyField(CategoryModel, null=True)
+    categories = models.ManyToManyField(CategoryModel, related_name='products')
     brand = models.ForeignKey(BrandModel, on_delete=models.CASCADE, verbose_name=_('brand'), null=True)
-    sizes = models.ManyToManyField(SizeModel, null=True)
-    colors = models.ManyToManyField(ColorModel, null=True)
+    sizes = models.ManyToManyField(SizeModel)
+    colors = models.ManyToManyField(ColorModel)
 
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated at'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('created at'))
@@ -72,7 +77,22 @@ class ProductModel(models.Model):
     def __str__(self) -> str:
         return self.title
     
+    def is_new(self):
+        now = timezone.now()
+        diff = now - self.created_at
+        return diff.days <= 3
+    
     class Meta:
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
     
+
+
+class ProductWishlistModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductModel, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        unique_together = ['user', 'product']
+        verbose_name = "Wishlist"
+        verbose_name_plural = "Wishlists"
