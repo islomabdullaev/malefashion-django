@@ -1,0 +1,90 @@
+{% extends 'layouts/base.html' %}
+
+{% block content  %}
+{% load static %}
+{% load my_tags %}
+<style>
+    .circle{
+      width:33px;
+      height:33px;
+      border-radius: 50%;
+      border-spacing: 2px;
+      border: 1px solid black
+}
+</style>
+     <!-- Breadcrumb Section Begin -->
+     <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{% url 'pages:home' %}">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        {% for wishlist in wishlists %}
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{ wishlist.product.image.url }}">
+                                    {% if wishlist.product.is_new %}
+                                        <span style="background-color: #111111; color: #ffffff;" class="label">New</span>
+                                    {% endif %}
+                                    <ul class="product__hover">
+                                        <li><a href="{% url 'products:create_wishlist' user_pk=request.user.pk product_pk=wishlist.product.pk %}">
+                                            {% if wishlist.product|in_wishlist:request.user %}
+                                            <img src="{% static 'img/heartr.png' %}" alt="">
+                                            {% else %}
+                                            <img src="{% static 'img/heartwhite.png' %}" alt="">
+                                            {% endif %}
+                                        </a></li>
+                                        <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt=""> <span>Compare</span></a>
+                                        </li>
+                                        <li><a href="#"><img src="{% static 'img/icon/search.png' %}" alt=""></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>{{ wishlist.product.title }}</h6>
+                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    <h5>${{ wishlist.product.price }}</h5>
+                                    <div class="product__color__select">
+                                        <label for="pc-4">
+                                            <input type="radio" id="pc-4">
+                                        </label>
+                                        <label class="active black" for="pc-5">
+                                            <input type="radio" id="pc-5">
+                                        </label>
+                                        <label class="grey" for="pc-6">
+                                            <input type="radio" id="pc-6">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -2,6 +2,7 @@
 
 {% block content  %}
 {% load static %}
+{% load my_tags %}
 <style>
     .circle{
       width:33px;
@@ -132,14 +133,17 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="shop__product__option__right">
-                                    <p>Sort by Price:</p>
-                                    <select>
-                                        <option value="">Sort</option>
-                                        <option value="">Low to High</option>
-                                        <option value="">High to Low</option>
-                                    </select>
-                                </div>
+                                <form id="sortForm" method="GET" action="{% url 'products:list' %}">
+                                    {% csrf_token %}
+                                    <div class="shop__product__option__right">
+                                        <p>Sort by Price:</p>
+                                        <select name="sort" id="sort" onchange="submitForm()">
+                                            <option value="">---</option>
+                                            <option value="asc">Low to High</option>
+                                            <option value="desc">High to Low</option>
+                                        </select>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -152,7 +156,13 @@
                                         <span style="background-color: #111111; color: #ffffff;" class="label">New</span>
                                     {% endif %}
                                     <ul class="product__hover">
-                                        <li><a href="{% url 'products:create_wishlist' user_pk=request.user.pk product_pk=product.pk %}"><img src="{% static 'img/heartwhite.png' %}" alt=""></a></li>
+                                        <li><a href="{% url 'products:create_wishlist' user_pk=request.user.pk product_pk=product.pk %}">
+                                            {% if product|in_wishlist:request.user %}
+                                            <img src="{% static 'img/heartr.png' %}" alt="">
+                                            {% else %}
+                                            <img src="{% static 'img/heartwhite.png' %}" alt="">
+                                            {% endif %}
+                                        </a></li>
                                         <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt=""> <span>Compare</span></a>
                                         </li>
                                         <li><a href="#"><img src="{% static 'img/icon/search.png' %}" alt=""></a></li>
@@ -201,4 +211,9 @@
         </div>
     </section>
     <!-- Shop Section End -->
+    <script>
+        function submitForm() {
+            document.getElementById("sortForm").submit();
+        }
+    </script>
 {% endblock %}
