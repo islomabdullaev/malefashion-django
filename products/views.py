@@ -3,12 +3,13 @@ from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import TemplateView, ListView
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from products.models import CategoryModel, ColorModel, ProductModel, BrandModel, ProductWishlistModel, SizeModel
 # Create your views here.
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     template_name = 'shop.html'
     model = ProductModel
     context_object_name = "products"
